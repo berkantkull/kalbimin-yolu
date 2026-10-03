@@ -291,7 +291,7 @@ SONGS.isla = (() => {
   const chords = 'Am G Am Am F Am C G Am G Am Am F Am C G Am Em Dm C G Dm Dm Am Am Em Dm C'.split(' ');
   const R = { Am: ['A2', 'E3'], G: ['G2', 'D3'], F: ['F2', 'C3'], C: ['C3', 'G3'], Em: ['E2', 'B2'], Dm: ['D2', 'A2'] };
   const bass = chords.map(c => `${R[c][0]} . - ${R[c][1]} . - ${R[c][0]} -`).join(' | ');
-  return { bpm: 100, tracks: [
+  return { bpm: 200, tracks: [
     { w: 'p25', v: 0.15, n: mel.join(' | ') },
     { w: 'triangle', v: 0.3, n: bass },
     { d: 1, n: 'k - h k s - h h' }] };
