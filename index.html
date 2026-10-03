@@ -343,11 +343,85 @@ SONGS.sbs = (() => {
   b[13] = b[9]; b[14] = b[10];
   const order = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 13, 14, 15, 17];
   const col = i => order.map(n => b[n][i]).join(' | ');
-  return { bpm: 116, tracks: [
+  return { bpm: 100, tracks: [
     { w: 'square', v: 0.12, n: col(0) },
     { w: 'triangle', v: 0.3, n: col(1) },
     { w: 'p12', v: 0.05, n: col(2) }] };
 })();
+// yardımcı: 16 adımlık ölçüde iki yarım notalık bas
+const half16 = (a, b) => `${a} . . . . . . . ${b} . . . . . . .`;
+
+// 2. anı: Son Arzum – Nilüfer (8-bit). 4/4, her adım bir onaltılık.
+SONGS.sonarzum = (() => {
+  const m = {
+    4: 'E4 . . A4 A4 . A4 . A4 . . B4 C5 . . .', 5: 'B4 . A4 . A4 . G4 . F4 . E4 . F4 . . .',
+    6: 'D5 . C5 . C5 . B4 . B4 . A4 . A4 . . B4', 7: 'C5 . G4 . . . E4 . F4 . G4 . E4 . . .',
+    8: 'E4 . A4 . A4 . A4 . A4 . . B4 C5 . . .', 9: 'D5 . . C5 B4 . A4 . B4 . C5 . D5 . . .',
+    10: 'D5 . . C5 C5 . B4 . B4 . A4 . G#4 . . .', 11: 'C5 . B4 . B4 . A4 . A4 . G#4 . A4 . . .',
+    12: 'A4 . . . B4 . . . C5 . . . . . . .', 13: 'C5 . B4 . . . A4 . B4 . . B4 C5 . D5 .',
+    14: 'D5 . C5 . C5 . B4 . C5 . . . C5 D5 E5 .', 15: 'E5 . . D5 D5 . C5 . D5 . . . D5 . E5 .',
+    16: 'F5 . E5 . E5 . D5 . E5 . A4 . B4 . C5 .', 19: 'E5 . . D5 D5 . C5 . B4 . . . C5 . B4 .',
+    20: 'B4 . A4 . A4 . G#4 . A4 . . . C5 . D5 .', 21: 'E5 . . . D5 . C5 . D5 . . . . . B4 .',
+    22: 'C5 . A4 . B4 A4 G#4 . A4 . . . . . . .', coda: 'B4 . A4 . A4 . G#4 . A4 . . . . . . .',
+  };
+  m[17] = m[13]; m[18] = m[14];
+  const bs = {
+    4: half16('A2', 'C3'), 5: half16('D3', 'F3'), 6: half16('G2', 'B2'), 7: 'C3 . . . . . . . B2 . . . G#2 . . .',
+    8: half16('A2', 'C3'), 9: half16('D3', 'F3'), 10: half16('D3', 'E3'), 11: 'F3 . . . E3 . . . A2 . . . . . . .',
+    12: '- - - - - - - - - - - - - - - -', 13: half16('D3', 'G2'), 14: half16('C3', 'F3'), 15: half16('D3', 'G2'),
+    16: half16('E3', 'A2'), 19: half16('D3', 'E3'), 20: half16('A2', 'C3'), 21: half16('C3', 'B2'),
+    22: 'A2 . . . G#2 . . . A2 . . . . . . .', coda: half16('A2', 'C3'),
+  };
+  bs[17] = bs[13]; bs[18] = bs[14];
+  const order = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+    4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 'coda']; // D.S. al Coda
+  return { bpm: 160, tracks: [
+    { w: 'square', v: 0.12, n: order.map(n => m[n]).join(' | ') },
+    { w: 'triangle', v: 0.3, n: order.map(n => bs[n]).join(' | ') }] };
+})();
+
+// 3. bölüm (Vogue Köşesi): Eylül Akşamı – Cem Kısmet (8-bit). 4/4, her adım bir onaltılık.
+SONGS.eylul = (() => {
+  const m = {
+    6: 'G5 . . . . F#5 E5 . . . . . - E4 . F#4', 7: 'G4 . . . . . . . - - - E4 G4 . G4 .',
+    8: 'F#4 . . . . . . . - - - - - F#4 . G4', 9: 'A4 . . . . . . . . . . . - - B4 C5',
+    10: 'B4 . . . . . . . . . . . - E4 . F#4', 11: 'G4 . . . . . . . - - - E4 G4 G4 A4 G4',
+    12: 'F#4 . . . . . . . - - - - - A4 . G#4', 13: 'A4 . . . . . . . . . . . - - B4 C5',
+    14: 'B4 . . . . . . . . . . . - A4 . B4', 15: 'C5 B4 C5 . C5 B4 C5 . . . . . - - B4 C5',
+    16: 'B4 A4 G4 A4 B4 A#4 B4 . . . . . - - A#4 B4', 17: 'A#4 . A#4 A#4 . G4 G4 . F#4 . . . - - F#4 .',
+    18: 'A4 . A4 A4 . G4 G4 G4 G4 F#4 . . - - F#4 E4', 19: 'D#4 . E4 . . . . . - - - - - A4 B4 .',
+    20: 'D#4 . E4 . . . . . - - - - - - D#4 E4', 21: 'F#4 . . . . . . D#4 . . . . - D#4 D#4 D#4',
+    22: '. . E4 . . . . . - - - - - - - -',
+  };
+  const ch = { 6: 'Em', 7: 'Em', 8: 'B7', 9: 'Am', 10: 'B7', 11: 'Em', 12: 'B7', 13: 'Am', 14: 'B7',
+    15: 'Am', 16: 'G', 17: 'F#|B7', 18: 'Adim|B7', 19: 'Em', 20: 'Em', 21: 'B7', 22: 'Em' };
+  const R = { Em: ['E2', 'B2'], B7: ['B2', 'F#2'], Am: ['A2', 'E3'], G: ['G2', 'D3'], 'F#': ['F#2', 'C#3'], Adim: ['A2', 'D#3'] };
+  const bass = c => {
+    const [a, b] = c.split('|');
+    return b ? `${R[a][0]} . . . ${R[a][1]} . . . ${R[b][0]} . . . ${R[b][1]} . . .`
+      : `${R[a][0]} . . . ${R[a][1]} . . . ${R[a][0]} . . . ${R[a][1]} . . .`;
+  };
+  const order = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 15, 16, 17, 18, 20, 21, 22];
+  return { bpm: 150, tracks: [
+    { w: 'square', v: 0.12, n: order.map(n => m[n]).join(' | ') },
+    { w: 'triangle', v: 0.3, n: order.map(n => bass(ch[n])).join(' | ') }] };
+})();
+
+// 3. anı: Yıldızların Altında – Kaptanzâde Ali Rıza Bey (8-bit). 4/4, her adım bir sekizlik.
+SONGS.yildiz = (() => {
+  const A = ['- A4 B4 C5 D5 . C5 .', 'F5 . . . E5 . . .', 'E5 F5 F5 E5 E5 D5 D5 C5', 'E5 . . . . . . .',
+    '- D5 C5 B4 C5 . D5 .', 'E5 . . . C5 . . .', 'B4 C5 D5 C5 E5 D5 C5 B4', 'A4 . . . . . . .'];
+  const B = ['A5 . G5 . F5 . E5 .', '- G5 . F5 F5 E5 E5 .', 'E5 F5 . E5 E5 D5 D5 .', '- E5 . D5 C5 B4 C5 .',
+    '- D5 C5 B4 C5 . D5 .', 'E5 . . . C5 . . .', 'B4 C5 D5 C5 E5 D5 C5 B4', 'A4 . . . . . . .'];
+  const cA = ['A2 A2', 'D3 A2', 'D3 A2', 'E2 E2', 'D3 G2', 'C3 A2', 'E2 E2', 'A2 A2'];
+  const cB = ['A2 A2', 'C3 A2', 'D3 D3', 'A2 A2', 'D3 G2', 'C3 A2', 'E2 E2', 'A2 A2'];
+  const h8 = s => { const [a, b] = s.split(' '); return `${a} . . . ${b} . . .`; };
+  const mel = [].concat(A, A, B, B), bas = [].concat(cA, cA, cB, cB).map(h8);
+  return { bpm: 100, tracks: [
+    { w: 'square', v: 0.12, n: mel.join(' | ') },
+    { w: 'triangle', v: 0.3, n: bas.join(' | ') }] };
+})();
+
 // Açılış: Fikrimin İnce Gülü – Muallim İsmail Hakkı Bey (8-bit). 3/4 vals, her ölçü 6 sekizlik.
 SONGS.fikrimin = (() => {
   const S1 = ['D5 . E5 . F5 .', 'E5 . . . . .', 'D5 . E5 . F5 .', 'E5 . . . . .',
@@ -599,7 +673,7 @@ const THEMES = [
     },
   },
   { // 3 — parlak gri fayanslar, altın koni ağaçlar, Vogue kitapları
-    name: 'Vogue Köşesi', song: 'kis',
+    name: 'Vogue Köşesi', song: 'eylul',
     top: tileC(x => {
       x.fillStyle = '#c8ccd2'; x.fillRect(0, 0, 16, 16);
       x.fillStyle = '#ffffff'; x.fillRect(0, 0, 16, 1);
@@ -930,7 +1004,7 @@ function update() {
       updatePlay(); winT++;
       if (winT % 6 === 0) heartBurst(L.goal.x - 4, L.goal.y, 2, 'w', 1.2);
       if (winT === 40 || winT === 90) heartBurst(L.goal.x - 4, L.goal.y - 6, 20, 'w', 2.2);
-      if (winT > 180) { particles = []; playSong(['isla', 'hatirla', 'ani'][levelIdx]); go('memory'); }
+      if (winT > 180) { particles = []; playSong(['isla', 'sonarzum', 'yildiz'][levelIdx]); go('memory'); }
       break;
     case 'memory': {
       if (st % 14 === 0) particles.push({ kind: 'mini', col: '#ff8fab', x: Math.random() * W, y: H + 6, vx: 0, vy: -rnd(0.2, 0.5), g: 0, life: 500, space: 's', wob: Math.random() * 6 });
@@ -1134,7 +1208,7 @@ function render() {
       big(HEART, 495, 330 + Math.round(Math.sin(tGlobal / 6) * 6), 3);
       big(EYL.idle, 560, 300, 5);
       txt('Eylül\'üme ulaş, kalpleri topla!', 512, 440, 12, '#fff');
-      const lvCredit = ['Müzik: Sen Benim Şarkılarımsın (8-bit)', 'Müzik: Hatırla Sevgili (8-bit)', ''][levelIdx];
+      const lvCredit = ['Müzik: Sen Benim Şarkılarımsın (8-bit)', 'Müzik: Hatırla Sevgili (8-bit)', 'Müzik: Cem Kısmet - Eylül Akşamı (8-bit)'][levelIdx];
       if (lvCredit) txt(lvCredit, 512, 540, 8, '#c8a8d8', 'center', '#000');
       break;
     }
@@ -1166,7 +1240,7 @@ function render() {
       const lines = typed(CAPTIONS[levelIdx], Math.floor((st - 40) / 3));
       lines.forEach((l, i) => txt(l, 560, 200 + i * 40, 16, '#fff', 'left'));
       txt('Toplanan kalp: ' + L.got, 560, 400, 12, '#ff8fab', 'left');
-      const credit = ['Müzik: Madonna - La Isla Bonita (8-bit)', 'Müzik: Hatırla Sevgili (8-bit)', ''][levelIdx];
+      const credit = ['Müzik: Madonna - La Isla Bonita (8-bit)', 'Müzik: Nilüfer - Son Arzum (8-bit)', 'Müzik: Yıldızların Altında - Kaptanzâde Ali Rıza Bey (8-bit)'][levelIdx];
       if (credit) txt(credit, 512, 550, 8, '#c8a8d8', 'center', '#000');
       if (Math.floor((st - 40) / 3) >= CAPTIONS[levelIdx].join('').length && blink) txt('ENTER: devam', 560, 500, 12, '#ffd27a', 'left');
       break;
