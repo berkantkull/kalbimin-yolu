@@ -25,6 +25,7 @@
   <div class="grp"><button data-k="jump">A</button></div>
 </div>
 <script src="fotolar.js"></script>
+<script src="eylul_aksami.js"></script>
 <script>
 'use strict';
 // =====================================================================
@@ -430,6 +431,25 @@ SONGS.yildiz = (() => {
     { w: 'triangle', v: 0.3, n: bas.join(' | ') }] };
 })();
 
+// 3. bölüm: Eylül Akşamı — tam düzenleme (lead gitar + vokal + ritim gitarı akorları), eylul_aksami.js'ten
+const midiF = m => 440 * Math.pow(2, (m - 69) / 12);
+function evTrack(str, steps, shift) {
+  const ev = new Array(steps).fill(null);
+  for (const tok of str.split(' ')) {
+    const [t, l, ms] = tok.split(':'), ti = parseInt(t, 36), len = parseInt(l, 36);
+    ev[ti] = (ev[ti] || []).concat(ms.split('.').map(m => ({ f: midiF(parseInt(m, 36) + shift), len })));
+  }
+  return ev;
+}
+if (typeof EYLUL_AKSAMI !== 'undefined') {
+  const E = EYLUL_AKSAMI;
+  SONGS.eylul = { bpm: E.bpm, div: E.tpq, tracks: [
+    { w: 'triangle', v: 0.32, ev: evTrack(E.lead, E.steps, 12) },   // lead gitar
+    { w: 'p25', v: 0.12, ev: evTrack(E.vocal, E.steps, 24) },       // vokal melodisi
+    { w: 'triangle', v: 0.26, ev: evTrack(E.bass, E.steps, 0) },    // ritim gitarı: bas
+    { w: 'p12', v: 0.035, ev: evTrack(E.chord, E.steps, 0) }] };    // ritim gitarı: akorlar
+}
+
 // Açılış: Fikrimin İnce Gülü – Muallim İsmail Hakkı Bey (8-bit). 3/4 vals, her ölçü 6 sekizlik.
 SONGS.fikrimin = (() => {
   const S1 = ['D5 . E5 . F5 .', 'E5 . . . . .', 'D5 . E5 . F5 .', 'E5 . . . . .',
@@ -492,7 +512,7 @@ function stopSong() {
   setTimeout(() => s.out.disconnect(), 400);
 }
 function schedule(s) {
-  const sp = 60 / s.def.bpm / 2;
+  const sp = 60 / s.def.bpm / (s.def.div || 2);
   while (s.next < AC.currentTime + 0.15) {
     for (const tr of s.def.tracks) {
       const ev = tr.ev[s.step % tr.ev.length]; if (!ev) continue;
@@ -501,7 +521,8 @@ function schedule(s) {
         if (ev === 'k') { tone(160, t, 0.12, 'sine', 0.5, s.out, 40); }
         else if (ev === 's') noise(t, 0.12, 0.22, s.out, 'bandpass', 2200);
         else if (ev === 'h') noise(t, 0.04, 0.12, s.out, 'highpass', 7000);
-      } else tone(ev.f, t, ev.len * sp * 0.92, tr.w, tr.v, s.out);
+      } else if (Array.isArray(ev)) ev.forEach(e => tone(e.f, t, e.len * sp * 0.92, tr.w, tr.v, s.out));
+      else tone(ev.f, t, ev.len * sp * 0.92, tr.w, tr.v, s.out);
     }
     s.next += sp; s.step++;
   }
