@@ -298,24 +298,28 @@ SONGS.isla = (() => {
 })();
 // 2. bölüm (Gece Terası): Hatırla Sevgili (8-bit). 3/4, her ölçü 6 sekizlik.
 SONGS.hatirla = (() => {
+  const _ = '- - - - - -', LA = ['- - C5 . C5 .', '- - A4 . A4 .'], GE = ['- - G#4 . G#4 .', '- - E4 . E4 .'], NO = [_, _];
+  // [melodi, akor üst sesi, akor alt sesi] — notadaki gibi: uzun tutulan melodi + ayrı çalınan akorlar
   const A = [ // 1–16
-    'A4 . C5 . E5 .', 'D5 . A4 . C5 .', 'E5 . C5 . C5 .', '- - C5 . C5 .',
-    'A4 . C5 . E5 .', 'D5 . A4 . C5 .', 'B4 . G#4 . G#4 .', '- - G#4 . G#4 .',
-    'B4 . C5 . D5 .', 'D5 . C5 . B4 .', 'D5 . A4 . D5 .', 'F5 . A4 . D5 .',
-    'E5 . B4 . C5 .', 'D5 . C5 . B4 .', 'A4 . C5 . E5 .', 'A4 . . . . .'];
+    ['A4 . C5 . E5 .'], ['D5 . A4 . C5 .'], ['E5 . . . . .', ...LA], [_, ...LA],
+    ['A4 . C5 . E5 .'], ['D5 . A4 . C5 .'], ['B4 . - - - -', ...GE], [_, ...GE],
+    ['B4 . C5 . D5 .'], ['D5 . C5 . B4 .'], ['D5 . A4 . D5 .'], ['F5 . A4 . D5 .'],
+    ['E5 . B4 . C5 .'], ['D5 . C5 . B4 .'], ['A4 . C5 . E5 .'], ['A4 . . . . .']];
   const B = [ // 17–32
-    'G#4 E5 A4 E5 B4 E5', 'G#4 E5 G#4 E5 F4 E5', 'E5 . C5 . C5 .', '- - C5 . C5 .',
-    'F5 . A4 . F5 .', 'E5 . D5 . C5 .', 'E5 . C5 . C5 .', '- - C5 . C5 .',
-    'F5 . A4 . F5 .', 'E5 . D5 . C5 .', 'E5 . C5 . D5 .', 'C5 . B4 . A4 .',
-    'B4 . C5 . D5 .', 'C5 . G#4 . B4 .', 'A4 . C5 . E5 .', 'A4 . . . . .'];
+    ['G#4 E5 A4 E5 B4 E5'], ['G#4 E5 G#4 E5 F4 E5'], ['E5 . - - - -', ...LA], [_, ...LA],
+    ['F5 . A4 . F5 .'], ['E5 . D5 . C5 .'], ['E5 . - - - -', ...LA], [_, ...LA],
+    ['F5 . A4 . F5 .'], ['E5 . D5 . C5 .'], ['E5 . - - D5 .', '- - C5 . - -', '- - A4 . - -'], ['C5 . B4 . A4 .'],
+    ['B4 . C5 . D5 .'], ['C5 . G#4 . B4 .'], ['A4 . C5 . E5 .'], ['A4 . . . . .']];
   const bA = 'A A A E A A E B E E D D E E A A'.split(' ');
   const bB = 'E E A E D D A E D D A A E E A A'.split(' ');
   const N = { A: 'A2', E: 'E2', D: 'D3', B: 'B2' };
-  const mel = A.concat(A, B, B), bas = bA.concat(bA, bB, bB);
-  return { bpm: 120, tracks: [
-    { w: 'p25', v: 0.15, n: mel.join(' | ') },
-    { w: 'triangle', v: 0.3, n: bas.map(b => N[b] + ' . . . . .').join(' | ') },
-    { d: 1, n: 'k - h - h -' }] };
+  const bars = A.concat(A, B, B).map(b => b.length === 1 ? [b[0], ...NO] : b), bas = bA.concat(bA, bB, bB);
+  const col = i => bars.map(b => b[i]).join(' | ');
+  return { bpm: 144, tracks: [
+    { w: 'square', v: 0.12, n: col(0) },
+    { w: 'p12', v: 0.06, n: col(1) },
+    { w: 'p12', v: 0.05, n: col(2) },
+    { w: 'triangle', v: 0.3, n: bas.map(b => N[b] + ' . . . . .').join(' | ') }] };
 })();
 // Final: Pilli Bebek – Bak (intro, 8-bit). Her adım bir onaltılık.
 SONGS.final = { bpm: 216, tracks: [
