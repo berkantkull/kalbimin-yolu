@@ -278,6 +278,24 @@ const SONGS = {
 };
 SONGS.baslik = Object.assign({}, SONGS.tema, { bpm: 112 });
 SONGS.ani = Object.assign({}, SONGS.gece, { bpm: 84 });
+// 1. anı: Madonna – La Isla Bonita (8-bit). Her adım bir sekizlik, her ölçü 8 adım.
+SONGS.isla = (() => {
+  const mel = [
+    'A4 . . E4 . . A4 .', 'B4 . . E4 . . B4 .', 'C5 . . B4 C5 . . .', '- - - - - - - -',
+    '- - - - C5 . . .', 'C5 . . . E5 . . .', 'E5 C5 . C5 . E5 . .', 'D5 . C5 B4 . . . B4',
+    'A4 . . E4 . . A4 .', 'B4 . . B4 . . D5 .', 'C5 . . B4 C5 . . .', '- - - - - - - -',
+    '- - - - C5 . . .', 'C5 . . . D5 . E5 .', 'E5 C5 . C5 . E5 . .', 'D5 . C5 B4 . . - -',
+    'C5 . C5 C5 . C5 C5 .', 'C5 . B4 B4 . . - -', 'D5 . D5 D5 . D5 D5 .', 'D5 . C5 C5 . . - -',
+    'B4 . B4 B4 . C5 B4 .', 'B4 . A4 A4 . . - -', 'A4 . A4 A4 . A4 . .', 'C5 . . B4 C5 . . .',
+    '- - C5 . C5 . C5 C5', 'C5 . B4 . B4 . . .', '- - D5 D5 . D5 . D5', 'D5 . C5 C5 . . C5 .'];
+  const chords = 'Am G Am Am F Am C G Am G Am Am F Am C G Am Em Dm C G Dm Dm Am Am Em Dm C'.split(' ');
+  const R = { Am: ['A2', 'E3'], G: ['G2', 'D3'], F: ['F2', 'C3'], C: ['C3', 'G3'], Em: ['E2', 'B2'], Dm: ['D2', 'A2'] };
+  const bass = chords.map(c => `${R[c][0]} . - ${R[c][1]} . - ${R[c][0]} -`).join(' | ');
+  return { bpm: 100, tracks: [
+    { w: 'p25', v: 0.15, n: mel.join(' | ') },
+    { w: 'triangle', v: 0.3, n: bass },
+    { d: 1, n: 'k - h k s - h h' }] };
+})();
 // Final: Pilli Bebek – Bak (intro, 8-bit). Her adım bir onaltılık.
 SONGS.final = { bpm: 216, tracks: [
   { w: 'p25', v: 0.15, n:
@@ -841,7 +859,7 @@ function update() {
       updatePlay(); winT++;
       if (winT % 6 === 0) heartBurst(L.goal.x - 4, L.goal.y, 2, 'w', 1.2);
       if (winT === 40 || winT === 90) heartBurst(L.goal.x - 4, L.goal.y - 6, 20, 'w', 2.2);
-      if (winT > 180) { particles = []; playSong('ani'); go('memory'); }
+      if (winT > 180) { particles = []; playSong(levelIdx === 0 ? 'isla' : 'ani'); go('memory'); }
       break;
     case 'memory': {
       if (st % 14 === 0) particles.push({ kind: 'mini', col: '#ff8fab', x: Math.random() * W, y: H + 6, vx: 0, vy: -rnd(0.2, 0.5), g: 0, life: 500, space: 's', wob: Math.random() * 6 });
@@ -1074,6 +1092,7 @@ function render() {
       const lines = typed(CAPTIONS[levelIdx], Math.floor((st - 40) / 3));
       lines.forEach((l, i) => txt(l, 560, 200 + i * 40, 16, '#fff', 'left'));
       txt('Toplanan kalp: ' + L.got, 560, 400, 12, '#ff8fab', 'left');
+      if (levelIdx === 0) txt('Müzik: Madonna - La Isla Bonita (8-bit)', 512, 550, 8, '#c8a8d8', 'center', '#000');
       if (Math.floor((st - 40) / 3) >= CAPTIONS[levelIdx].join('').length && blink) txt('ENTER: devam', 560, 500, 12, '#ffd27a', 'left');
       break;
     }
