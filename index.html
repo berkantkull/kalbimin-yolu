@@ -320,6 +320,34 @@ SONGS.hatirla = (() => {
     { w: 'p12', v: 0.05, n: col(2) },
     { w: 'triangle', v: 0.3, n: bas.map(b => N[b] + ' . . . . .').join(' | ') }] };
 })();
+// 1. bölüm (Gün Batımı Kafesi): Sen Benim Şarkılarımsın (8-bit). 4/4, her ölçü 8 sekizlik.
+SONGS.sbs = (() => {
+  const _ = '- - - - - - - -';
+  const b = { // [melodi, bas, basın üst sesi]
+    1: ['- B4 B4 C5 C5 B4 B4 G5', 'E3 . . . E3 . . .', _],
+    2: ['G5 F#5 F#5 . . . . .', 'B2 . . . B2 . . .', '- - - - D#3 . . .'],
+    3: ['- A4 A4 B4 B4 A4 A4 F#5', 'B2 . . . D#3 . . .', _],
+    4: ['F#5 E5 E5 . . . . .', 'E3 . . . E3 . . .', '- - - - G3 . . .'],
+    5: ['- G4 G4 A4 A4 G4 G4 E5', 'C3 . . . C3 . . .', _],
+    6: ['E5 D#5 D#5 . - D#5 E5 F#5', 'B2 . . . B2 . . .', '- - - - D#3 . . .'],
+    7: ['B4 . . . . . . .', 'E3 . . . E3 . . .', '- - - - G3 . . .'],
+    8: ['B4 . . . . . . .', 'E3 . . . E3 . . .', '- - - - G#3 . . .'],
+    9: ['- C5 C5 D5 D5 C5 C5 D5', 'A3 . . . A3 . . .', _],
+    10: ['D5 B4 B4 C5 C5 B4 B4 C5', 'E3 . . . E3 . . .', _],
+    11: ['C5 A4 A4 B4 B4 A4 G4 A4', 'C4 . . . B3 . . .', _],
+    12: ['B4 . . . . . - -', 'E3 . . . E3 . . .', '- - - - G#3 . . .'],
+    15: ['C5 A4 A4 B4 B4 A4 G4 F#4', 'C4 . . . B3 . . .', _],
+    16: ['E4 . . . E4 F#4 G4 A4', 'E3 . . . E3 . . .', '- - - - G3 . . .'],
+    17: ['E4 . . . . . . .', 'E3 . . . . . . .', _],
+  };
+  b[13] = b[9]; b[14] = b[10];
+  const order = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 13, 14, 15, 17];
+  const col = i => order.map(n => b[n][i]).join(' | ');
+  return { bpm: 116, tracks: [
+    { w: 'square', v: 0.12, n: col(0) },
+    { w: 'triangle', v: 0.3, n: col(1) },
+    { w: 'p12', v: 0.05, n: col(2) }] };
+})();
 // Açılış: Fikrimin İnce Gülü – Muallim İsmail Hakkı Bey (8-bit). 3/4 vals, her ölçü 6 sekizlik.
 SONGS.fikrimin = (() => {
   const S1 = ['D5 . E5 . F5 .', 'E5 . . . . .', 'D5 . E5 . F5 .', 'E5 . . . . .',
@@ -456,7 +484,7 @@ const USED = tileC(x => { x.fillStyle = '#4a3420'; x.fillRect(0, 0, 16, 16); x.f
 
 const THEMES = [
   { // 1 — gün batımı, ahşap tavan, taş duvar, mavi apartmanlar
-    name: 'Gün Batımı Kafesi', song: 'tema',
+    name: 'Gün Batımı Kafesi', song: 'sbs',
     top: tileC(x => {
       x.fillStyle = '#b97a3e'; x.fillRect(0, 0, 16, 16);
       x.fillStyle = '#e8a862'; x.fillRect(0, 0, 16, 2);
@@ -1106,6 +1134,8 @@ function render() {
       big(HEART, 495, 330 + Math.round(Math.sin(tGlobal / 6) * 6), 3);
       big(EYL.idle, 560, 300, 5);
       txt('Eylül\'üme ulaş, kalpleri topla!', 512, 440, 12, '#fff');
+      const lvCredit = ['Müzik: Sen Benim Şarkılarımsın (8-bit)', 'Müzik: Hatırla Sevgili (8-bit)', ''][levelIdx];
+      if (lvCredit) txt(lvCredit, 512, 540, 8, '#c8a8d8', 'center', '#000');
       break;
     }
     case 'play': case 'win': {
