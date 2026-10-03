@@ -278,7 +278,22 @@ const SONGS = {
 };
 SONGS.baslik = Object.assign({}, SONGS.tema, { bpm: 112 });
 SONGS.ani = Object.assign({}, SONGS.gece, { bpm: 84 });
-SONGS.final = Object.assign({}, SONGS.tema, { bpm: 100 });
+// Final: Pilli Bebek – Bak (intro, 8-bit). Her adım bir onaltılık.
+SONGS.final = { bpm: 216, tracks: [
+  { w: 'p25', v: 0.15, n:
+    'B4 B4 B4 C#5 B4 C#5 D5 B4 D5 E5 B4 E5 D5 B4 C#5 B4 | ' +
+    'B4 B4 B4 C#5 B4 C#5 D5 B4 D5 E5 B4 E5 D5 B4 C#5 B4 | ' +
+    'B4 B4 B4 C#5 B4 C#5 D5 B4 D5 E5 B4 E5 D5 B4 C#5 B4 | ' +
+    'B4 B4 B4 C#5 B4 C#5 B4 B4 B4 C#5 B4 C#5 D5 B4 C#5 B4 | ' +
+    'A#4 C#5 A#4 A#4 C#5 A#4 A#4 C#5 E5 A#4 D5 A#4 A#4 C#5 A#4 A#4 | ' +
+    'A#4 C#5 A#4 A#4 C#5 A#4 A#4 C#5 E5 A#4 D5 A#4 A#4 C#5 A#4 .' },
+  { w: 'p12', v: 0.04, n:
+    'B5 . . . . . . . . . . . . . . . | D6 . . . . . . . . . . . . . . . | B5 . . . . . . . . . . . . . . . | D6 . . . . . . . . . . . . . . . | ' +
+    'C#6 . . . . . . . . . . . . . . . | A#5 . . . . . . . . . . . . . . .' },
+  { w: 'triangle', v: 0.3, n:
+    'B2 - B2 - B2 - B2 - B2 - B2 - B2 - B2 - | B2 - B2 - B2 - B2 - B2 - B2 - B2 - B2 - | B2 - B2 - B2 - B2 - B2 - B2 - B2 - B2 - | B2 - B2 - B2 - B2 - B2 - B2 - B2 - B2 - | ' +
+    'F#2 - F#2 - F#2 - F#2 - F#2 - F#2 - F#2 - F#2 - | F#2 - F#2 - F#2 - F#2 - F#2 - F#2 - F#2 - F#2 -' },
+  { d: 1, n: 'k - h - s - h - k k h - s - h -' }] };
 for (const k in SONGS) SONGS[k].tracks.forEach(tr => {
   if (tr.ev) return;
   const tok = tr.n.split(/\s+/).filter(x => x && x !== '|');
@@ -1085,6 +1100,7 @@ function render() {
       if (n > tot + 10) {
         txt('Toplanan kalp: ' + totalHearts + '  (ama benimki zaten senin)', 512, 466, 12, '#ffe2c0');
         if (blink) txt('ENTER: baştan oyna', 512, 510, 12, '#ffd27a');
+        txt('Müzik: Pilli Bebek - Bak (8-bit intro)', 512, 550, 8, '#c8a8d8', 'center', '#000');
       }
       break;
     }
