@@ -296,6 +296,27 @@ SONGS.isla = (() => {
     { w: 'triangle', v: 0.3, n: bass },
     { d: 1, n: 'k - h k s - h h' }] };
 })();
+// 2. bölüm (Gece Terası): Hatırla Sevgili (8-bit). 3/4, her ölçü 6 sekizlik.
+SONGS.hatirla = (() => {
+  const A = [ // 1–16
+    'A4 . C5 . E5 .', 'D5 . A4 . C5 .', 'E5 . C5 . C5 .', '- - C5 . C5 .',
+    'A4 . C5 . E5 .', 'D5 . A4 . C5 .', 'B4 . G#4 . G#4 .', '- - G#4 . G#4 .',
+    'B4 . C5 . D5 .', 'D5 . C5 . B4 .', 'D5 . A4 . D5 .', 'F5 . A4 . D5 .',
+    'E5 . B4 . C5 .', 'D5 . C5 . B4 .', 'A4 . C5 . E5 .', 'A4 . . . . .'];
+  const B = [ // 17–32
+    'G#4 E5 A4 E5 B4 E5', 'G#4 E5 G#4 E5 F4 E5', 'E5 . C5 . C5 .', '- - C5 . C5 .',
+    'F5 . A4 . F5 .', 'E5 . D5 . C5 .', 'E5 . C5 . C5 .', '- - C5 . C5 .',
+    'F5 . A4 . F5 .', 'E5 . D5 . C5 .', 'E5 . C5 . D5 .', 'C5 . B4 . A4 .',
+    'B4 . C5 . D5 .', 'C5 . G#4 . B4 .', 'A4 . C5 . E5 .', 'A4 . . . . .'];
+  const bA = 'A A A E A A E B E E D D E E A A'.split(' ');
+  const bB = 'E E A E D D A E D D A A E E A A'.split(' ');
+  const N = { A: 'A2', E: 'E2', D: 'D3', B: 'B2' };
+  const mel = A.concat(A, B, B), bas = bA.concat(bA, bB, bB);
+  return { bpm: 120, tracks: [
+    { w: 'p25', v: 0.15, n: mel.join(' | ') },
+    { w: 'triangle', v: 0.3, n: bas.map(b => N[b] + ' . . . . .').join(' | ') },
+    { d: 1, n: 'k - h - h -' }] };
+})();
 // Final: Pilli Bebek – Bak (intro, 8-bit). Her adım bir onaltılık.
 SONGS.final = { bpm: 216, tracks: [
   { w: 'p25', v: 0.15, n:
@@ -464,7 +485,7 @@ const THEMES = [
     dyn() { },
   },
   { // 2 — gece terası, kafe camı, yaldızlı sandalyeler, ışık zinciri
-    name: 'Gece Terası', song: 'gece',
+    name: 'Gece Terası', song: 'hatirla',
     top: tileC(x => {
       x.fillStyle = '#bfae8c'; x.fillRect(0, 0, 16, 16);
       x.fillStyle = '#efe0bc'; x.fillRect(0, 0, 16, 2);
@@ -859,7 +880,7 @@ function update() {
       updatePlay(); winT++;
       if (winT % 6 === 0) heartBurst(L.goal.x - 4, L.goal.y, 2, 'w', 1.2);
       if (winT === 40 || winT === 90) heartBurst(L.goal.x - 4, L.goal.y - 6, 20, 'w', 2.2);
-      if (winT > 180) { particles = []; playSong(levelIdx === 0 ? 'isla' : 'ani'); go('memory'); }
+      if (winT > 180) { particles = []; playSong(['isla', 'hatirla', 'ani'][levelIdx]); go('memory'); }
       break;
     case 'memory': {
       if (st % 14 === 0) particles.push({ kind: 'mini', col: '#ff8fab', x: Math.random() * W, y: H + 6, vx: 0, vy: -rnd(0.2, 0.5), g: 0, life: 500, space: 's', wob: Math.random() * 6 });
@@ -1092,7 +1113,8 @@ function render() {
       const lines = typed(CAPTIONS[levelIdx], Math.floor((st - 40) / 3));
       lines.forEach((l, i) => txt(l, 560, 200 + i * 40, 16, '#fff', 'left'));
       txt('Toplanan kalp: ' + L.got, 560, 400, 12, '#ff8fab', 'left');
-      if (levelIdx === 0) txt('Müzik: Madonna - La Isla Bonita (8-bit)', 512, 550, 8, '#c8a8d8', 'center', '#000');
+      const credit = ['Müzik: Madonna - La Isla Bonita (8-bit)', 'Müzik: Hatırla Sevgili (8-bit)', ''][levelIdx];
+      if (credit) txt(credit, 512, 550, 8, '#c8a8d8', 'center', '#000');
       if (Math.floor((st - 40) / 3) >= CAPTIONS[levelIdx].join('').length && blink) txt('ENTER: devam', 560, 500, 12, '#ffd27a', 'left');
       break;
     }
