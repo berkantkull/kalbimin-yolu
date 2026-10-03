@@ -1,8 +1,8 @@
 # Kalbimin Yolu ❤️
 
-Eylül için yapılmış, tarayıcıda oynanan 8-bit bir platform oyunu.
+Eylül'üm için yapılmış, tarayıcıda oynanan 8-bit bir platform oyunu.
 
-Berkant, anılarımızın geçtiği üç mekandan geçerek Eylül'e ulaşmaya çalışır; her bölümün sonunda bir anı fotoğrafı pixel art olarak açılır.
+Berkant, anılarımızın geçtiği üç mekandan geçerek Eylül'üme ulaşmaya çalışır; her bölümün sonunda bir anı fotoğrafı pixel art olarak açılır.
 
 **Oyna:** https://berkantkull.github.io/kalbimin-yolu/
 

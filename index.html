@@ -28,7 +28,7 @@
 <script>
 'use strict';
 // =====================================================================
-//  KALBİMİN YOLU — Berkant'tan Eylül'e
+//  KALBİMİN YOLU — Berkant'tan Eylül'üme
 // =====================================================================
 const W = 256, H = 144, S = 4, T = 16, GY = 112;   // düşük çözünürlük, ölçek, karo, zemin çizgisi
 const START = new Date(2026, 2, 25);               // 25 Mart 2026
@@ -74,14 +74,14 @@ function sprite(rows, pal) {
 function flipped(c) { const f = mk(c.width, c.height), x = f.getContext('2d'); x.translate(c.width, 0); x.scale(-1, 1); x.drawImage(c, 0, 0); return f; }
 
 // ---------------------------------------------------------------- karakterler (fotoğraflardan)
-// Berkant: kısa koyu saç, sakal, küpe, koyu ceket
-const PAL_B = { k: '#1c1512', s: '#c68a60', d: '#8a5c40', m: '#5a2e22', e: '#1c1512', g: '#e0e0ea', j: '#26262c', t: '#4a4a56', p: '#2a3550', b: '#121212' };
+// Berkant: kısa koyu saç, sakal, küpe, sarı camlı gözlük, koyu ceket
+const PAL_B = { F: '#1a1a1a', Y: '#f2c43c', y: '#c99a1e', k: '#1c1512', s: '#c68a60', d: '#8a5c40', m: '#5a2e22', e: '#1c1512', g: '#e0e0ea', j: '#26262c', t: '#4a4a56', p: '#2a3550', b: '#121212' };
 const B_TOP = [
   '...kkkkkk...',
   '..kkkkkkkkk.',
   '..kkkssssss.',
-  '..ksssesses.',
-  '..gssssssss.',
+  '..kssFeYFeYF',
+  '..gssFYyFYyF',
   '...sdssssd..',
   '...ddmmddd..',
   '....dssd....',
@@ -95,7 +95,7 @@ const LEGS = {
   run2: ['...pppppp...', '....pppp....', '....pp.pp...', '...bbb.bbb..'],
   jump: ['...pppppp...', '..pp...ppp..', '.bb.....bb..', '............'],
 };
-const blinkB = B_TOP.map(r => r.replace(/e/g, 'd'));
+const blinkB = B_TOP.map(r => r.replace(/e/g, 'Y'));
 const BERK = {};
 for (const k in LEGS) BERK[k] = sprite(B_TOP.concat(LEGS[k]), PAL_B);
 BERK.blink = sprite(blinkB.concat(LEGS.idle), PAL_B);
@@ -722,19 +722,19 @@ function updatePlay() {
   let ax = 0;
   if (control) { if (keys.left) ax -= 1; if (keys.right) ax += 1; }
   else { ax = P.x < L.goal.x - 15 ? 1 : 0; }
-  if (ax) { P.vx += ax * (P.ground ? 0.28 : 0.2); P.face = ax; }
+  if (ax) { P.vx += ax * (P.ground ? 0.16 : 0.12); P.face = ax; }
   else P.vx *= P.ground ? 0.72 : 0.95;
   if (Math.abs(P.vx) < 0.05) P.vx = 0;
-  P.vx = clamp(P.vx, -1.9, control ? 1.9 : 1.1);
+  P.vx = clamp(P.vx, -1.35, control ? 1.35 : 0.9);
 
   P.jbuf = control && pressed.jump ? 7 : P.jbuf - 1;
   P.coyote = P.ground ? 6 : P.coyote - 1;
   if (P.jbuf > 0 && P.coyote > 0) {
-    P.vy = -6; P.jbuf = 0; P.coyote = 0; SFX.jump();
+    P.vy = -5; P.jbuf = 0; P.coyote = 0; SFX.jump();
     for (let i = 0; i < 4; i++) particles.push({ kind: 'dust', x: P.x + 5, y: P.y + P.h, vx: rnd(-0.8, 0.8), vy: rnd(-0.5, 0), g: 0, life: 14 });
   }
-  if (!keys.jump && P.vy < -2.2 && control) P.vy = -2.2;
-  P.vy = Math.min(P.vy + 0.32, 6);
+  if (!keys.jump && P.vy < -1.8 && control) P.vy = -1.8;
+  P.vy = Math.min(P.vy + 0.23, 4.5);
 
   moveX(P, P.vx);
   P.prevB = P.y + P.h;
@@ -757,7 +757,7 @@ function updatePlay() {
   // kalpler
   for (const h of L.hearts) {
     if (h.taken) continue;
-    if (Math.abs(P.x + P.w / 2 - h.x) < 9 && Math.abs(P.y + P.h / 2 - h.y) < 11) {
+    if (Math.abs(P.x + P.w / 2 - h.x) < 11 && Math.abs(P.y + P.h / 2 - h.y) < 12) {
       h.taken = true; L.got++; totalHearts++; SFX.heart();
       heartBurst(h.x, h.y, 5, 'w', 1);
     }
@@ -773,7 +773,7 @@ function updatePlay() {
     if (!control) continue;
     if (P.x < e.x + e.w && P.x + P.w > e.x && P.y < e.y + e.h && P.y + P.h > e.y) {
       if (P.vy > 0 && P.y + P.h - e.y < 7) {
-        e.dead = 1; P.vy = -4.6; SFX.stomp(); L.got++; totalHearts++;
+        e.dead = 1; P.vy = -4; SFX.stomp(); L.got++; totalHearts++;
         heartBurst(e.x + 6, e.y, 8, 'w', 1.4);
       } else hurt(e.x + e.w / 2);
     }
@@ -797,7 +797,7 @@ function updatePlay() {
 function hurt(fromX) {
   if (P.inv > 0) return;
   SFX.hurt(); cam.shake = 8; P.inv = 90;
-  P.vx = P.x + P.w / 2 < fromX ? -2.4 : 2.4; P.vy = -3.6;
+  P.vx = P.x + P.w / 2 < fromX ? -1.8 : 1.8; P.vy = -3;
   if (totalHearts > 0 && L.got > 0) {
     totalHearts--; L.got--;
     particles.push({ kind: 'broken', x: P.x + 2, y: P.y - 6, vx: 0, vy: -1.2, g: 0.04, life: 40 });
@@ -988,7 +988,7 @@ function render() {
       B.fillStyle = '#1a0f24'; B.fillRect(0, 0, W, H);
       drawParticles('s', 0);
       M.drawImage(buf, 0, 0, W * S, H * S);
-      const s1 = 'Eylül için yapıldı';
+      const s1 = 'Eylül\'üm için yapıldı';
       M.font = '24px ' + FONT; const w1 = M.measureText(s1).width;
       txt(s1, 512 - 24, 210, 24, '#fff');
       big(HEART, 512 - 24 + w1 / 2 + 14, 206, 4);
@@ -1008,7 +1008,7 @@ function render() {
       drawParticles('s', 0);
       M.drawImage(buf, 0, 0, W * S, H * S);
       txt('KALBİMİN YOLU', 512, 70, 40, '#ff4d6d', 'center', '#3a0a1a');
-      txt('Berkant & Eylül', 512, 138, 16, '#fff');
+      txt('Berkant & Eylül\'üm',512, 138, 16, '#fff');
       const bob = Math.round(Math.sin(tGlobal / 8)) * 4;
       big((tGlobal % 180) < 7 ? BERK.blink : BERK.idle, 330, GY * S - 16 * 6 * 1 - 0, 6);
       big((tGlobal % 200) < 8 ? EYL.blink : EYL.idle, 622, GY * S - 16 * 6, 6);
@@ -1028,7 +1028,7 @@ function render() {
       big(run, 400, 300, 5);
       big(HEART, 495, 330 + Math.round(Math.sin(tGlobal / 6) * 6), 3);
       big(EYL.idle, 560, 300, 5);
-      txt('Eylül\'e ulaş, kalpleri topla!', 512, 440, 12, '#fff');
+      txt('Eylül\'üme ulaş, kalpleri topla!', 512, 440, 12, '#fff');
       break;
     }
     case 'play': case 'win': {
@@ -1036,12 +1036,12 @@ function render() {
       M.drawImage(buf, 0, 0, W * S, H * S);
       // Eylül etiketi
       const lx = (L.goal.x - cx + 6) * S;
-      if (lx > -100 && lx < cv.width + 100) txt('Eylül', lx, (L.goal.y - 38) * S, 12, '#fff');
+      if (lx > -100 && lx < cv.width + 100) txt('Eylül\'üm', lx, (L.goal.y - 38) * S, 12, '#fff');
       // HUD
       txt(L.th.name, 20, 18, 12, '#fff', 'left');
       big(HEART, 860, 12, 4);
       txt('x ' + totalHearts, 900, 18, 16, '#fff', 'left');
-      if (state === 'play' && levelIdx === 0 && st < 300) txt('Eylül\'e giden yolu bul!  ->', 512, 70, 12, '#ffd27a');
+      if (state === 'play' && levelIdx === 0 && st < 300) txt('Eylül\'üme giden yolu bul!  ->', 512, 70, 12, '#ffd27a');
       if (state === 'win' && winT > 40) {
         const msg = ['Buldum seni!', 'Yine sana çıktı yolum!', 'Kalbim hep burada!'][levelIdx];
         txt(msg, 512, 150, 24, '#ff4d6d', 'center', '#fff');
@@ -1074,7 +1074,7 @@ function render() {
       typed(fl, n).forEach((l, i) => txt(l, 512, 70 + i * 36, 16, '#fff'));
       const tot = fl.join('').length;
       if (n > tot) {
-        const s1 = 'SENİ SEVİYORUM EYLÜL';
+        const s1 = 'SENİ SEVİYORUM EYLÜL\'ÜM';
         txt(s1, 512, 210, 24, '#ff4d6d', 'center', '#fff');
         txt('- Berkant', 512, 256, 12, '#ffd27a');
       }
